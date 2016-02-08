@@ -1,0 +1,13 @@
+A simple inital planning ToDo list to keep track of which elements of the program need to be made at each stage/sprint.
+Additions must be dated. finished tasks are to be stared at the start of the line 
+Example:
+create inital plan  //not complete
+***Create inital plan   //complete
+
+Inital planning. 08/02/16
+Create inital database design.
+Create add/edit/delete functions/method.
+Create Veiw function/method.
+Create inital GUI design.
+Implement GUI design.
+Implement inital meeting scheduling.
