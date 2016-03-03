@@ -20,7 +20,7 @@ class StudentPlannerGUI(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (StartPage,Login, Calendar, AddEvent,EditEvent,CreateGroup):
+        for F in (StartPage,Login, SignUp, Calendar, AddEvent,EditEvent,CreateGroup):
             page_name = F.__name__
             frame = F(container, self)
             self.frames[page_name] = frame
@@ -78,6 +78,31 @@ class Login(tk.Frame):
         
         button = tk.Button(self, text="Sign In",
                            command=lambda: controller.show_frame("StartPage"))
+
+        signUpButton = tk.Button(self, text="Sign Up",
+                           command=lambda: controller.show_frame("SignUp"))
+        button.pack()
+        signUpButton.pack()
+
+class SignUp(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        label = tk.Label(self, text="Sign Up", font=TITLE_FONT)
+        label.pack(side="top", fill="x", pady=10)
+
+        usernameLbl=tk.Label(self,text="Username:").pack()
+        uNameEntry=tk.Entry(self,text="").pack()
+
+        passwordLbl=tk.Label(self,text="Enter Password:").pack()
+        pwEntry=tk.Entry(self,text="").pack()
+
+        confirmPasswordLbl=tk.Label(self,text="Confirm Password:").pack()
+        confirmPwEntry=tk.Entry(self,text="").pack()
+        
+        button = tk.Button(self, text="Create User",
+                           command=lambda: controller.show_frame("Login"))
         button.pack() 
 
 class Calendar(tk.Frame):
