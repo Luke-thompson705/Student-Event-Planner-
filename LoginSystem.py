@@ -8,12 +8,14 @@ def tryLogin(username, password):
     for eachline in myfile:
         eachline = eachline.strip("\n")
         data = eachline.split(" ")
-        if username == data[0]:
-            if data[1] == password:
-                return True
+        if not eachline.isspace():
+            if 2==len(data):
+                if username == data[0]:
+                    if data[1] == password:
+                        return True
 
-            else:
-                return False
+                    else:
+                        return False
     myfile.close()
     return False
 
@@ -49,12 +51,35 @@ def setPassword(username, newPassword):
         if data[0] == username:
             removeUser(username)
             addUser(username, newPassword)
+    myfile.close()
+
+def isUser(username):
+    data = []
+    myfile = open("PasswordDatabase")
+    contents = myfile.readlines()
+    myfile.seek(0)
+    for eachline in contents:
+        thisline = eachline.strip("\n")
+        data = thisline.split(" ")
+        if data[0] == username:
+            return True
+    myfile.close()
+    return False
+
+def noSpaces(string):
+    for letter in string:
+        if letter.isspace():
+            return False
+    if not string:
+            return False
+    return True
 
 
 
 
 
-# This function "center(win)" is a modified version of the function found at:
+
+# This function "center(win)"and "centerDoNotUse(win) are modified versions of the function found at:
 # http://stackoverflow.com/questions/3352918/how-to-center-a-window-on-the-screen-in-tkinter
 
 

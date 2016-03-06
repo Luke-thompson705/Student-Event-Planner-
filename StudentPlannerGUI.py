@@ -82,7 +82,7 @@ class Login(tk.Frame):
         button = tk.Button(self, text="Sign In",
                            command=lambda: self.login())
         signUpButton = tk.Button(self, text="Sign Up",
-                           command=lambda: controller.show_frame("SignUp"))
+                           command=lambda: self.signUp())
         button.pack()
         signUpButton.pack()
 
@@ -102,6 +102,11 @@ class Login(tk.Frame):
             button = Button(errorbox, text="Ok", command=errorbox.destroy)
             button.pack()
 
+    def signUp(self):
+        self.uNameEntry.delete(0,"end")
+        self.pwEntry.delete(0,"end")
+        self.controller.show_frame("SignUp")
+
 class SignUp(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -110,18 +115,82 @@ class SignUp(tk.Frame):
         label.pack(side="top", fill="x", pady=10)
 
         usernameLbl=tk.Label(self,text="Username:").pack()
-        uNameEntry=tk.Entry(self,text="").pack()
+        self.uNameEntry=tk.Entry(self,text="")
+        self.uNameEntry.pack()
 
         passwordLbl=tk.Label(self,text="Enter Password:").pack()
-        pwEntry=tk.Entry(self,text="").pack()
+        self.pwEntry=tk.Entry(self,text="",show="*")
+        self.pwEntry.pack()
 
         confirmPasswordLbl=tk.Label(self,text="Confirm Password:").pack()
-        confirmPwEntry=tk.Entry(self,text="").pack()
+        self.confirmPwEntry=tk.Entry(self,text="",show="*")
+        self.confirmPwEntry.pack()
 
         button = tk.Button(self, text="Create User",
-                           command=lambda: controller.show_frame("Login"))
+                           command=lambda:self.createUser())
         button.pack()
+        exitButton = tk.Button(self, text="Exit",
+                           command=lambda: self.exit())
+        exitButton.pack()
 
+    def createUser(self):
+        name=self.uNameEntry.get()
+        pw=self.pwEntry.get()
+        pwc=self.confirmPwEntry.get()
+        if not isUser(name):
+            if noSpaces(name):
+                if noSpaces(pw):
+                    if pw==pwc:
+                        addUser(name,pw)
+                        self.controller.show_frame("Login")
+                        self.uNameEntry.delete(0,"end")
+                        self.pwEntry.delete(0,"end")
+                        self.confirmPwEntry.delete(0,"end")
+                        errorbox = Toplevel()
+                        centerDoNotUse(errorbox)
+                        errorbox.title("Congratulations")
+                        errormessage = Message(errorbox, text="An Account for "+name+" has been created. Please sign-in.")
+                        errormessage.pack()
+                        button = Button(errorbox, text="Ok", command=errorbox.destroy)
+                        button.pack()
+                    else:
+                        errorbox = Toplevel()
+                        centerDoNotUse(errorbox)
+                        errorbox.title("Attention")
+                        errormessage = Message(errorbox, text="Passwords do not match")
+                        errormessage.pack()
+                        button = Button(errorbox, text="Ok", command=errorbox.destroy)
+                        button.pack()
+                else:
+                    errorbox = Toplevel()
+                    centerDoNotUse(errorbox)
+                    errorbox.title("Attention")
+                    errormessage = Message(errorbox, text="Passwords cannot contain spaces")
+                    errormessage.pack()
+                    button = Button(errorbox, text="Ok", command=errorbox.destroy)
+                    button.pack()
+            else:
+                errorbox = Toplevel()
+                centerDoNotUse(errorbox)
+                errorbox.title("Attention")
+                errormessage = Message(errorbox, text="The username cannot contain spaces")
+                errormessage.pack()
+                button = Button(errorbox, text="Ok", command=errorbox.destroy)
+                button.pack()
+        elif isUser(name):
+            errorbox = Toplevel()
+            centerDoNotUse(errorbox)
+            errorbox.title("Attention")
+            errormessage = Message(errorbox, text="Please enter a different username")
+            errormessage.pack()
+            button = Button(errorbox, text="Ok", command=errorbox.destroy)
+            button.pack()
+
+    def exit(self):
+        self.uNameEntry.delete(0,"end")
+        self.pwEntry.delete(0,"end")
+        self.confirmPwEntry.delete(0,"end")
+        self.controller.show_frame("Login")
 
 
 
