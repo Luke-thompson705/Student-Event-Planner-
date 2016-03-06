@@ -2,8 +2,11 @@
 #http://www.tkdocs.com/tutorial/widgets.html
 import tkinter as tk
 from tkinter import ttk
+<<<<<<< HEAD
 from tkinter import *
 from LoginSystem import *
+=======
+>>>>>>> refs/remotes/origin/Danny's-Branch
 #import Tkinter as tk   # python
 
 TITLE_FONT = ("Helvetica", 18, "bold")
@@ -22,7 +25,11 @@ class StudentPlannerGUI(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
+<<<<<<< HEAD
         for F in (StartPage,Login, Calendar, AddEvent,EditEvent,CreateGroup):
+=======
+        for F in (StartPage,Login, SignUp, Calendar, AddEvent,EditEvent,CreateGroup):
+>>>>>>> refs/remotes/origin/Danny's-Branch
             page_name = F.__name__
             frame = F(container, self)
             self.frames[page_name] = frame
@@ -73,6 +80,7 @@ class Login(tk.Frame):
         label.pack(side="top", fill="x", pady=10)
 
         usernameLbl=tk.Label(self,text="Username:").pack()
+<<<<<<< HEAD
         self.uNameEntry=tk.Entry(self,textvariable=tk.StringVar())
         self.uNameEntry.pack()
 
@@ -102,6 +110,41 @@ class Login(tk.Frame):
 
 
 
+=======
+        uNameEntry=tk.Entry(self,text="").pack()
+
+        passwordLbl=tk.Label(self,text="Password:").pack()
+        pwEntry=tk.Entry(self,text="").pack()
+        
+        button = tk.Button(self, text="Sign In",
+                           command=lambda: controller.show_frame("StartPage"))
+
+        signUpButton = tk.Button(self, text="Sign Up",
+                           command=lambda: controller.show_frame("SignUp"))
+        button.pack()
+        signUpButton.pack()
+
+class SignUp(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        label = tk.Label(self, text="Sign Up", font=TITLE_FONT)
+        label.pack(side="top", fill="x", pady=10)
+
+        usernameLbl=tk.Label(self,text="Username:").pack()
+        uNameEntry=tk.Entry(self,text="").pack()
+
+        passwordLbl=tk.Label(self,text="Enter Password:").pack()
+        pwEntry=tk.Entry(self,text="").pack()
+
+        confirmPasswordLbl=tk.Label(self,text="Confirm Password:").pack()
+        confirmPwEntry=tk.Entry(self,text="").pack()
+        
+        button = tk.Button(self, text="Create User",
+                           command=lambda: controller.show_frame("Login"))
+        button.pack() 
+>>>>>>> refs/remotes/origin/Danny's-Branch
 
 class Calendar(tk.Frame):
 
@@ -170,7 +213,11 @@ class AddEvent(tk.Frame):
         rb8=tk.Radiobutton(self, text="Username",value=8).pack(anchor='e')
         rb11=tk.Radiobutton(self, text="Select All",value=11).pack()
         
+<<<<<<< HEAD
         submitBtn = tk.Button(self, text="Submit").pack()
+=======
+        submitBtn = tk.Button(self, text="Submit").pack() 
+>>>>>>> refs/remotes/origin/Danny's-Branch
         button = tk.Button(self, text="Exit",
                            command=lambda: controller.show_frame("StartPage"))
         button.pack(side="right")
@@ -215,7 +262,11 @@ class EditEvent(tk.Frame):
         rb8=tk.Radiobutton(self, text="Username",value=8).pack(anchor='e')
         rb11=tk.Radiobutton(self, text="Select All",value=11).pack()
         
+<<<<<<< HEAD
         submitBtn = tk.Button(self, text="Save Changes").pack()
+=======
+        submitBtn = tk.Button(self, text="Save Changes").pack() 
+>>>>>>> refs/remotes/origin/Danny's-Branch
         deleteBtn = tk.Button(self, text="Delete Event").pack(side="right")
         label.pack(side="top", fill="x", pady=10)
         button = tk.Button(self, text="Exit",
@@ -234,7 +285,11 @@ class CreateGroup(tk.Frame):
         button.pack()    
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     user=""
     app = StudentPlannerGUI()
     center(app)
+=======
+    app = StudentPlannerGUI()
+>>>>>>> refs/remotes/origin/Danny's-Branch
     app.mainloop()

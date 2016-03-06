@@ -10,7 +10,18 @@ class Database:
             currentline = line.split(",")
             studentFileList.append(currentline)
         studentFile.close()
-        return studentFileList 
+        return studentFileList
+    
+#returns a dictionary 
+    def getDict(self):
+        myfile = open(self.filename)
+        datesDict = {}
+        for newline in myfile:
+            newline = newline.strip("\n")  
+            currentline = newline.split(",")
+            datesDict[currentline[0]] = currentline[1:len(currentline)]     
+        myfile.close()
+        return datesDict
 
 #Adds a student to the text file on a new line
     def addStudent(self, name, busyTimes, boundary):
@@ -28,3 +39,11 @@ class Database:
         else:
             print("Not found")
 
+    def getAllStudents(self):
+        studentFile = open(self.filename, "r")
+        studentFileList = []
+        for line in studentFile:
+            currentline = line.split(",")
+            studentFileList.append(currentline[0])
+        studentFile.close()
+        return studentFileList;
