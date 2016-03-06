@@ -262,4 +262,4 @@ if __name__ == "__main__":
     user=""
     app = StudentPlannerGUI()
     center(app)
-    app.mainloop()
+    app.mainloop
