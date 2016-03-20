@@ -9,8 +9,14 @@ class Main:
         
         namesList = self.database.getAllStudents()
         
+        year = int(input("Please enter the year: "))
+        month = int(input("Please enter the month: "))
+        day = int(input("Please enter the day: "))
+        start = int(input("Please enter the start time: "))
+        end = int(input("Please enter the end time: "))
+        tag = input("Tag this meeting: ")
 
-        meetingDate = int(input("Please enter the date you would like to meet in the format yyyymmdd: "))
+        meetingDate = (datetime(year, month, day, start, 0), datetime(year, month, day, end, 0), tag)
 
         #Creates a list of all bad times to meet on the desired date.
         badTimes = set()
@@ -28,4 +34,4 @@ class Main:
         print(", ".join("{:02d}".format(hour) for hour in sorted(goodTimes)))
 
              
-mian=Main()
+main = Main()
