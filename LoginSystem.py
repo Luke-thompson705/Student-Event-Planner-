@@ -3,7 +3,7 @@ from tkinter import *
 
 
 def tryLogin(username, password):
-    myfile = open("PasswordDatabase")
+    myfile = open("PasswordDatabase.txt")
     data = []
     for eachline in myfile:
         eachline = eachline.strip("\n")
@@ -21,14 +21,14 @@ def tryLogin(username, password):
 
 
 def addUser(username, password):
-    myfile = open("PasswordDatabase", "a")
+    myfile = open("PasswordDatabase.txt", "a")
     myfile.write("\n" + username + " " + password)
     myfile.close()
 
 
 def removeUser(username):
     data = []
-    myfile = open("PasswordDatabase", "r+")
+    myfile = open("PasswordDatabase.txt", "r+")
     contents = myfile.readlines()
     myfile.seek(0)
     for eachline in contents:
@@ -42,7 +42,7 @@ def removeUser(username):
 
 def setPassword(username, newPassword):
     data = []
-    myfile = open("PasswordDatabase", "r+")
+    myfile = open("PasswordDatabase.txt", "r+")
     contents = myfile.readlines()
     myfile.seek(0)
     for eachline in contents:
@@ -55,7 +55,7 @@ def setPassword(username, newPassword):
 
 def isUser(username):
     data = []
-    myfile = open("PasswordDatabase")
+    myfile = open("PasswordDatabase.txt")
     contents = myfile.readlines()
     myfile.seek(0)
     for eachline in contents:
