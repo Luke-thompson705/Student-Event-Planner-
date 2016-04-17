@@ -4,7 +4,10 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import *
 from LoginSystem import *
+import tkinter as Tkinter
+from tkinter import simpledialog as tkSimpleDialog
 #import Tkinter as tk   # python
+import CalendarWidget as ttkcalendar
 
 TITLE_FONT = ("Helvetica", 18, "bold")
 
@@ -22,7 +25,7 @@ class StudentPlannerGUI(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (StartPage,Login, SignUp, Calendar, AddEvent,EditEvent,CreateGroup):
+        for F in (StartPage,Login, SignUp, Events, AddEvent,EditEvent,CreateGroup):
             page_name = F.__name__
             frame = F(container, self)
             self.frames[page_name] = frame
@@ -48,8 +51,8 @@ class StartPage(tk.Frame):
         label = tk.Label(self, text="Homepage", font=TITLE_FONT)
         label.pack(side="top", fill="x", pady=10)
 
-        button1 = tk.Button(self, text="Calendar",
-                            command=lambda: controller.show_frame("Calendar"))
+        button1 = tk.Button(self, text="Events Calendar",
+                            command=lambda: main(controller))
         button2 = tk.Button(self, text="Add Event",
                             command=lambda: controller.show_frame("AddEvent"))
         button3 = tk.Button(self, text="Edit Event",
@@ -192,40 +195,55 @@ class SignUp(tk.Frame):
         self.confirmPwEntry.delete(0,"end")
         self.controller.show_frame("Login")
 
+#main() and the CalendarDialog class are modifided virsions of the code found at
+#https://github.com/moshekaplan/tkinter_components/tree/master/CalendarDialog
+def main(controller):
+    root = app
+    root.wm_title("Calendar")
+
+    cd = CalendarDialog(root)
+    global eDate
+    check=True
+    while check:
+        try:
+
+            eDate=(cd.result.strftime('%m/%d/%Y'))
+            print(cd.result.strftime('%m/%d/%Y'))
+            check=False
+
+        except AttributeError:
+            cd = CalendarDialog(root)
+
+    print(eDate)
+    cd.destroy()
+    controller.show_frame("Events")
 
 
 
+class CalendarDialog(tkSimpleDialog.Dialog):
+    """Dialog box that displays a calendar and returns the selected date"""
+    def body(self, master):
+        self.calendar = ttkcalendar.Calendar(master)
+        self.calendar.pack()
+
+    def apply(self):
+        self.result = self.calendar.selection
 
 
-class Calendar(tk.Frame):
+
+class Events(tk.Frame):
 
     def __init__(self, parent, controller):
         import calendar as cd#calendar usage info from https://pymotw.com/2/calendar/
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Calendar", font=TITLE_FONT)
-        label.pack(side="top", fill="x", pady=10)
-
-        month=2
-        year=2016
-        str1=cd.month(year,month)
-
-        monthLbl=tk.Label(self,text="Month:").pack()
-        monthEntry=tk.Entry(self,text="").pack()
-
-        yearLbl=tk.Label(self,text="Year:").pack()
-        YearEntry=tk.Entry(self,text="").pack()
-
-        calendarLbl=tk.Label(self,text=str1,width=35, height=10, font=('courier', 14, 'bold'))\
-                                       .pack() #*****Figure out why "justify=LEFT" does not work******
-
-        dateSelectLbl=tk.Label(self,text="Select Date:").pack()
-        dsEntry=tk.Entry(self,text="").pack()
-        eventSelectBtn= tk.Button(self,text="Go").pack() #add message box containing info?
-
+        global eDate
+        label = tk.Label(self, textvariable=eDate, font=TITLE_FONT)
+        label.pack()
         button = tk.Button(self, text="Exit",
                            command=lambda: controller.show_frame("StartPage"))
         button.pack()
+
 
 
 class AddEvent(tk.Frame):
@@ -329,6 +347,7 @@ class CreateGroup(tk.Frame):
 
 if __name__ == "__main__":
     user=""
+    eDate=StringVar
     app = StudentPlannerGUI()
     center(app)
     app.mainloop()
