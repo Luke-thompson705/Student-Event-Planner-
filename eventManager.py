@@ -13,14 +13,14 @@ class EventManager:
         def addEvent(name, date):
             file = open('schedules.txt', 'w')
             #date as string in format 'April 17 2016 10:00PM'
-            event = datetime.strptime(date, '%b %d %Y %I:%M%p')
+            event = datetime.strptime(date, '%B %d %Y %I:%M%p')
             for i in file:
                 if i == name:
                     schedules[name].append(event)
                 
         def removeGarment(name, date):
             file = open('schedules.txt', 'w')
-            event = datetime.strptime(date, '%b %d %Y %I:%M%p')
+            event = datetime.strptime(date, '%B %d %Y %I:%M%p')
             for i in file:
                 if i == name:
                     for i in schedules[name]:
