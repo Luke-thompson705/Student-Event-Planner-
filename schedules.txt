@@ -2,6 +2,6 @@
 
     "Luke Thompson" : []
     "Harry Povey" : []
-    "Dave Borris" []
+    "Dave Borris" : []
     
 }
