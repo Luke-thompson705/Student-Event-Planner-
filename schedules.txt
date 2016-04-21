@@ -1,5 +1,7 @@
-schedules = {
-    'Luke Thompson' : []
-    'Harry Povey' []
-    'Dave Borris' []
+{
+
+    "Luke Thompson" : []
+    "Harry Povey" : []
+    "Dave Borris" []
+    
 }
