@@ -10,7 +10,7 @@ class EventManager:
         
         namesList = self.schedules.getAllStudents()
     
-                def addEvent(name, date, description):
+        def addEvent(name, date, description):
             event = {date: description}
             with open("schedules.txt") as dataFile:
                 schedules = json.load(dataFile)
