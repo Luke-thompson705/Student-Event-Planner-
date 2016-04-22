@@ -18,13 +18,10 @@ class EventManager:
             with open("schedules.txt", "w") as newFile:
                 json.dump(schedules, newFile)
                         
-        def removeEvent(date):
+        def removeEvent(name, date):
             with open("schedules.txt") as dataFile:
                 schedules = json.load(dataFile)
-                for i in schedules:
-                    for j in schedules[i]:
-                        if j == date:
-                            schedules[i].remove(j)
+                schedules[name].remove(date)
             with open("schedules.txt", "w") as newFile:
                 json.dump(schedules, newFile)
 
