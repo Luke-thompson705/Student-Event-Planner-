@@ -2,7 +2,12 @@
 #http://www.tkdocs.com/tutorial/widgets.html
 import tkinter as tk
 from tkinter import ttk
+from tkinter import *
+from LoginSystem import *
+import tkinter as Tkinter
+from tkinter import simpledialog as tkSimpleDialog
 #import Tkinter as tk   # python
+import CalendarWidget as ttkcalendar
 
 TITLE_FONT = ("Helvetica", 18, "bold")
 
@@ -20,7 +25,7 @@ class StudentPlannerGUI(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (StartPage,Login, SignUp, Calendar, AddEvent,EditEvent,CreateGroup):
+        for F in (StartPage,Login, SignUp, Events, AddEvent,EditEvent,CreateGroup):
             page_name = F.__name__
             frame = F(container, self)
             self.frames[page_name] = frame
@@ -37,6 +42,7 @@ class StudentPlannerGUI(tk.Tk):
         frame = self.frames[page_name]  
         frame.tkraise()
 
+
 class StartPage(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -45,8 +51,8 @@ class StartPage(tk.Frame):
         label = tk.Label(self, text="Homepage", font=TITLE_FONT)
         label.pack(side="top", fill="x", pady=10)
 
-        button1 = tk.Button(self, text="Calendar",
-                            command=lambda: controller.show_frame("Calendar"))
+        button1 = tk.Button(self, text="Events Calendar",
+                            command=lambda: main(controller))
         button2 = tk.Button(self, text="Add Event",
                             command=lambda: controller.show_frame("AddEvent"))
         button3 = tk.Button(self, text="Edit Event",
@@ -70,21 +76,41 @@ class Login(tk.Frame):
         label.pack(side="top", fill="x", pady=10)
 
         usernameLbl=tk.Label(self,text="Username:").pack()
-        uNameEntry=tk.Entry(self,text="").pack()
+        self.uNameEntry=tk.Entry(self,textvariable=tk.StringVar())
+        self.uNameEntry.pack()
 
         passwordLbl=tk.Label(self,text="Password:").pack()
-        pwEntry=tk.Entry(self,text="").pack()
-        
+        self.pwEntry=tk.Entry(self,textvariable=tk.StringVar(),show="*")
+        self.pwEntry.pack()
         button = tk.Button(self, text="Sign In",
-                           command=lambda: controller.show_frame("StartPage"))
-
+                           command=lambda: self.login())
         signUpButton = tk.Button(self, text="Sign Up",
-                           command=lambda: controller.show_frame("SignUp"))
+                           command=lambda: self.signUp())
         button.pack()
         signUpButton.pack()
 
-class SignUp(tk.Frame):
+    def login(self):
+        if tryLogin(self.uNameEntry.get(),self.pwEntry.get()):
+            global user
+            user=self.uNameEntry.get()
+            self.controller.show_frame("StartPage")
+            self.uNameEntry.delete(0,"end")
+            self.pwEntry.delete(0,"end")
+        elif not tryLogin(self.uNameEntry.get(),self.pwEntry.get()):
+            errorbox = Toplevel()
+            centerDoNotUse(errorbox)
+            errorbox.title("Attention")
+            errormessage = Message(errorbox, text="Username/ Password combination incorrect")
+            errormessage.pack()
+            button = Button(errorbox, text="Ok", command=errorbox.destroy)
+            button.pack()
 
+    def signUp(self):
+        self.uNameEntry.delete(0,"end")
+        self.pwEntry.delete(0,"end")
+        self.controller.show_frame("SignUp")
+
+class SignUp(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
@@ -92,47 +118,132 @@ class SignUp(tk.Frame):
         label.pack(side="top", fill="x", pady=10)
 
         usernameLbl=tk.Label(self,text="Username:").pack()
-        uNameEntry=tk.Entry(self,text="").pack()
+        self.uNameEntry=tk.Entry(self,text="")
+        self.uNameEntry.pack()
 
         passwordLbl=tk.Label(self,text="Enter Password:").pack()
-        pwEntry=tk.Entry(self,text="").pack()
+        self.pwEntry=tk.Entry(self,text="",show="*")
+        self.pwEntry.pack()
 
         confirmPasswordLbl=tk.Label(self,text="Confirm Password:").pack()
-        confirmPwEntry=tk.Entry(self,text="").pack()
-        
-        button = tk.Button(self, text="Create User",
-                           command=lambda: controller.show_frame("Login"))
-        button.pack() 
+        self.confirmPwEntry=tk.Entry(self,text="",show="*")
+        self.confirmPwEntry.pack()
 
-class Calendar(tk.Frame):
+        button = tk.Button(self, text="Create User",
+                           command=lambda:self.createUser())
+        button.pack()
+        exitButton = tk.Button(self, text="Exit",
+                           command=lambda: self.exit())
+        exitButton.pack()
+
+    def createUser(self):
+        name=self.uNameEntry.get()
+        pw=self.pwEntry.get()
+        pwc=self.confirmPwEntry.get()
+        if not isUser(name):
+            if noSpaces(name):
+                if noSpaces(pw):
+                    if pw==pwc:
+                        addUser(name,pw)
+                        self.controller.show_frame("Login")
+                        self.uNameEntry.delete(0,"end")
+                        self.pwEntry.delete(0,"end")
+                        self.confirmPwEntry.delete(0,"end")
+                        errorbox = Toplevel()
+                        centerDoNotUse(errorbox)
+                        errorbox.title("Congratulations")
+                        errormessage = Message(errorbox, text="An Account for "+name+" has been created. Please sign-in.")
+                        errormessage.pack()
+                        button = Button(errorbox, text="Ok", command=errorbox.destroy)
+                        button.pack()
+                    else:
+                        errorbox = Toplevel()
+                        centerDoNotUse(errorbox)
+                        errorbox.title("Attention")
+                        errormessage = Message(errorbox, text="Passwords do not match")
+                        errormessage.pack()
+                        button = Button(errorbox, text="Ok", command=errorbox.destroy)
+                        button.pack()
+                else:
+                    errorbox = Toplevel()
+                    centerDoNotUse(errorbox)
+                    errorbox.title("Attention")
+                    errormessage = Message(errorbox, text="Passwords cannot contain spaces")
+                    errormessage.pack()
+                    button = Button(errorbox, text="Ok", command=errorbox.destroy)
+                    button.pack()
+            else:
+                errorbox = Toplevel()
+                centerDoNotUse(errorbox)
+                errorbox.title("Attention")
+                errormessage = Message(errorbox, text="The username cannot contain spaces")
+                errormessage.pack()
+                button = Button(errorbox, text="Ok", command=errorbox.destroy)
+                button.pack()
+        elif isUser(name):
+            errorbox = Toplevel()
+            centerDoNotUse(errorbox)
+            errorbox.title("Attention")
+            errormessage = Message(errorbox, text="Please enter a different username")
+            errormessage.pack()
+            button = Button(errorbox, text="Ok", command=errorbox.destroy)
+            button.pack()
+
+    def exit(self):
+        self.uNameEntry.delete(0,"end")
+        self.pwEntry.delete(0,"end")
+        self.confirmPwEntry.delete(0,"end")
+        self.controller.show_frame("Login")
+
+#main() and the CalendarDialog class are modifided virsions of the code found at
+#https://github.com/moshekaplan/tkinter_components/tree/master/CalendarDialog
+def main(controller):
+    root = app
+    root.wm_title("Calendar")
+
+    cd = CalendarDialog(root)
+    global eDate
+    check=True
+    while check:
+        try:
+
+            eDate=(cd.result.strftime('%m/%d/%Y'))
+            print(cd.result.strftime('%m/%d/%Y'))
+            check=False
+
+        except AttributeError:
+            cd = CalendarDialog(root)
+
+    print(eDate)
+    cd.destroy()
+    controller.show_frame("Events")
+
+
+
+class CalendarDialog(tkSimpleDialog.Dialog):
+    """Dialog box that displays a calendar and returns the selected date"""
+    def body(self, master):
+        self.calendar = ttkcalendar.Calendar(master)
+        self.calendar.pack()
+
+    def apply(self):
+        self.result = self.calendar.selection
+
+
+
+class Events(tk.Frame):
 
     def __init__(self, parent, controller):
         import calendar as cd#calendar usage info from https://pymotw.com/2/calendar/
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Calendar", font=TITLE_FONT)
-        label.pack(side="top", fill="x", pady=10)
-
-        month=2
-        year=2016
-        str1=cd.month(year,month)
-
-        monthLbl=tk.Label(self,text="Month:").pack()
-        monthEntry=tk.Entry(self,text="").pack()
-
-        yearLbl=tk.Label(self,text="Year:").pack()
-        YearEntry=tk.Entry(self,text="").pack()
-
-        calendarLbl=tk.Label(self,text=str1,width=35, height=10, font=('courier', 14, 'bold'))\
-                                       .pack() 
-
-        dateSelectLbl=tk.Label(self,text="Select Date:").pack()
-        dsEntry=tk.Entry(self,text="").pack()
-        eventSelectBtn= tk.Button(self,text="Go").pack() #add message box containing info?
-
+        global eDate
+        label = tk.Label(self, textvariable=eDate, font=TITLE_FONT)
+        label.pack()
         button = tk.Button(self, text="Exit",
                            command=lambda: controller.show_frame("StartPage"))
         button.pack()
+
 
 
 class AddEvent(tk.Frame):
@@ -171,7 +282,7 @@ class AddEvent(tk.Frame):
         rb8=tk.Radiobutton(self, text="Username",value=8).pack(anchor='e')
         rb11=tk.Radiobutton(self, text="Select All",value=11).pack()
         
-        submitBtn = tk.Button(self, text="Submit").pack() 
+        submitBtn = tk.Button(self, text="Submit").pack()
         button = tk.Button(self, text="Exit",
                            command=lambda: controller.show_frame("StartPage"))
         button.pack(side="right")
@@ -216,7 +327,7 @@ class EditEvent(tk.Frame):
         rb8=tk.Radiobutton(self, text="Username",value=8).pack(anchor='e')
         rb11=tk.Radiobutton(self, text="Select All",value=11).pack()
         
-        submitBtn = tk.Button(self, text="Save Changes").pack() 
+        submitBtn = tk.Button(self, text="Save Changes").pack()
         deleteBtn = tk.Button(self, text="Delete Event").pack(side="right")
         label.pack(side="top", fill="x", pady=10)
         button = tk.Button(self, text="Exit",
@@ -224,10 +335,12 @@ class EditEvent(tk.Frame):
         button.pack(side="left")
 
 class CreateGroup(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        label = tk.Label(self, text="Create Group", font=TITLE_FONT)
+        label.pack(side="top", fill="x", pady=10)
+        button = tk.Button(self, text="Exit")
         label = tk.Label(self, text="Create Group", font=TITLE_FONT).pack(side="top", fill="x", pady=10)
         helpLbl=tk.Label(self,text="Click username to add to group:").pack()
 
@@ -246,6 +359,7 @@ class CreateGroup(tk.Frame):
         submitBtn = tk.Button(self, text="Save and Exit",command=lambda:controller.show_frame("StartPage")).pack()
         button = tk.Button(self, text="Cancel and Exit",
                            command=lambda: controller.show_frame("StartPage"))
+        button.pack()    
         button.pack()
 
     def AddToList(self) :
@@ -257,11 +371,10 @@ class CreateGroup(tk.Frame):
             self.list_box_1.delete( idx,idx )
             self.list_box_2.insert("end",s)
             pos = pos + 1
-            
 
-        
-
-        
 if __name__ == "__main__":
+    user=""
+    eDate=StringVar
     app = StudentPlannerGUI()
+    center(app)
     app.mainloop()
