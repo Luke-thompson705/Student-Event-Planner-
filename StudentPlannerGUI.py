@@ -37,7 +37,6 @@ class StudentPlannerGUI(tk.Tk):
         frame = self.frames[page_name]  
         frame.tkraise()
 
-
 class StartPage(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -125,7 +124,7 @@ class Calendar(tk.Frame):
         YearEntry=tk.Entry(self,text="").pack()
 
         calendarLbl=tk.Label(self,text=str1,width=35, height=10, font=('courier', 14, 'bold'))\
-                                       .pack() #*****Figure out why "justify=LEFT" does not work******
+                                       .pack() 
 
         dateSelectLbl=tk.Label(self,text="Select Date:").pack()
         dsEntry=tk.Entry(self,text="").pack()
@@ -229,12 +228,40 @@ class CreateGroup(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Create Group", font=TITLE_FONT)
-        label.pack(side="top", fill="x", pady=10)
-        button = tk.Button(self, text="Exit",
-                           command=lambda: controller.show_frame("StartPage"))
-        button.pack()    
+        label = tk.Label(self, text="Create Group", font=TITLE_FONT).pack(side="top", fill="x", pady=10)
+        helpLbl=tk.Label(self,text="Click username to add to group:").pack()
 
+
+        self.list_box_1 = tk.Listbox(self, selectmode="extended")
+        self.list_box_1.pack()
+        self.add_button = tk.Button(self, text="Add to Group",command=self.AddToList)
+        self.add_button.pack()
+        self.list_box_2 = tk.Listbox(self, selectmode="extended")
+        self.list_box_2.pack()
+
+        for i in  ["Oli", "Steven", "Luke", "Lee", "Harry"]:
+            s = str(i)
+            self.list_box_1.insert( "end",s )
+
+        submitBtn = tk.Button(self, text="Save and Exit",command=lambda:controller.show_frame("StartPage")).pack()
+        button = tk.Button(self, text="Cancel and Exit",
+                           command=lambda: controller.show_frame("StartPage"))
+        button.pack()
+
+    def AddToList(self) :
+        items = self.list_box_1.curselection()
+        pos = 0
+        for i in items :
+            idx = int(i) - pos
+            s = self.list_box_1.get(idx)
+            self.list_box_1.delete( idx,idx )
+            self.list_box_2.insert("end",s)
+            pos = pos + 1
+            
+
+        
+
+        
 if __name__ == "__main__":
     app = StudentPlannerGUI()
     app.mainloop()
