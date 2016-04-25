@@ -1,14 +1,10 @@
 from Database import *
 from datetime import datetime
+import json
 
 class EventManager:
+    
     def __init__(self):
-        
-        self.schedules = Schedules("schedules.txt")
-        
-        datesDict = self.schedules.getDict()
-        
-        namesList = self.schedules.getAllStudents()
     
         def addEvent(name, date, description):
             event = {date: description}
