@@ -338,9 +338,6 @@ class CreateGroup(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Create Group", font=TITLE_FONT)
-        label.pack(side="top", fill="x", pady=10)
-        button = tk.Button(self, text="Exit")
         label = tk.Label(self, text="Create Group", font=TITLE_FONT).pack(side="top", fill="x", pady=10)
         helpLbl=tk.Label(self,text="Click username to add to group:").pack()
 
